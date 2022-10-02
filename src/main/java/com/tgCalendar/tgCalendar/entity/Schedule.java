@@ -15,6 +15,8 @@ import java.util.Date;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int schedule_id;
+
     private int id;
 
     private String title;
@@ -22,6 +24,7 @@ public class Schedule {
 
     private Date startDate;
     private Date endDate;
+    private String duration;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

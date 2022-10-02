@@ -2,6 +2,7 @@ package com.tgCalendar.tgCalendar.entity;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -17,6 +18,9 @@ public class User {
     private String id;
 
     private String password;
-    private String name;
+
+    @Column (unique = true)
+    private String nickName;
+
     private String email;
 }
