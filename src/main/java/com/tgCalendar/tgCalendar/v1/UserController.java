@@ -3,6 +3,7 @@ package com.tgCalendar.tgCalendar.v1;
 import com.sun.net.httpserver.HttpServer;
 import com.tgCalendar.tgCalendar.dto.UserDto;
 import com.tgCalendar.tgCalendar.entity.User;
+import com.tgCalendar.tgCalendar.security.SecurityUtil;
 import com.tgCalendar.tgCalendar.security.jwt.JwtTokenProvider;
 import com.tgCalendar.tgCalendar.repository.UserRepository;
 import com.tgCalendar.tgCalendar.service.UserService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Security;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -104,11 +106,13 @@ public class UserController {
 
     //내 정보 조회
     @GetMapping("/user/me")
-    public boolean getInfo() {
+    public String getInfo() {
+        String userId = SecurityUtil.getCurrentMemberId();
 
 
 
-        return true;
+
+        return userId;
     }
 
 
