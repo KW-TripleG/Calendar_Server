@@ -1,5 +1,6 @@
 package com.tgCalendar.tgCalendar.v1;
 
+import com.sun.net.httpserver.HttpServer;
 import com.tgCalendar.tgCalendar.dto.UserDto;
 import com.tgCalendar.tgCalendar.entity.User;
 import com.tgCalendar.tgCalendar.security.jwt.JwtTokenProvider;
@@ -10,17 +11,19 @@ import com.tgCalendar.tgCalendar.util.StatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -77,4 +80,36 @@ public class UserController {
                                                                                                     // 이후 클라이언트는 이 JWT 토큰을 'X-AUTH-TOKEN' 필드에 넣어서 요청
 
     }
+
+    // 내 정보 조회 - security 필터 없이
+//    @GetMapping("/user/me")
+//    public ResponseEntity<Response> getMyInfo(@RequestHeader("X-AUTH-TOKEN") String token) {
+//        if (token == null || jwtTokenProvider.validateToken(token) == false) {
+//            Response body = Response.builder()
+//                    .status(StatusEnum.UNAUTHORIZED)
+//                    .message("권한이 없는 유저입니다.")
+//                    .build();
+//            return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        String userId = jwtTokenProvider.getUserPk(token);
+//
+//        Response body = Response.builder()
+//                .status(StatusEnum.OK)
+//                .data(new UserDto(userService.findById(userId)))
+//                .message("내 정보 조회 성공")
+//                .build();
+//        return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
+//    }
+
+    //내 정보 조회
+    @GetMapping("/user/me")
+    public boolean getInfo() {
+
+
+
+        return true;
+    }
+
+
 }

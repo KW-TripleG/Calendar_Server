@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Data
 @Entity
@@ -29,12 +30,17 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return new HashSet<GrantedAuthority>();
     }
 
     @Override
     public String getUsername() {
         return id;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
