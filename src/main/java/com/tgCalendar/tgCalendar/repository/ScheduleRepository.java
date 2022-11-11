@@ -9,7 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
-
-    Optional<Schedule> findById(String id);
-
+    Optional<Schedule> findById(int id);
 }

@@ -8,5 +8,4 @@ public class TgCalendarApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TgCalendarApplication.class, args);
 	}
-
 }

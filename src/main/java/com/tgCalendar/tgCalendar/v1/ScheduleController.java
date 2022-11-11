@@ -1,6 +1,11 @@
 package com.tgCalendar.tgCalendar.v1;
 
 import com.tgCalendar.tgCalendar.dto.ScheduleDto;
+import com.tgCalendar.tgCalendar.entity.User;
+import com.tgCalendar.tgCalendar.service.ScheduleService;
+import com.tgCalendar.tgCalendar.util.Response;
+import com.tgCalendar.tgCalendar.util.StatusEnum;
+import com.tgCalendar.tgCalendar.dto.ScheduleDto;
 import com.tgCalendar.tgCalendar.service.ScheduleService;
 import com.tgCalendar.tgCalendar.util.Response;
 import com.tgCalendar.tgCalendar.util.StatusEnum;
@@ -14,6 +19,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1")
 public class ScheduleController {
     private final ScheduleService scheduleService;
+
+    //스케줄 등록
+    @PutMapping("/schedule")
+    public ResponseEntity<Response> login(@RequestBody ScheduleDto schedule) {
+        int savedScheduleId = scheduleService.saveSchedule(schedule);
+
+        Response body = Response.builder()
+                .status(StatusEnum.OK)
+                .data(savedScheduleId)
+                .message("스케줄 등록 성공")
+                .build();
+        return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
+}
 
     @PutMapping("/update")
     public ResponseEntity<Response> updateSchedule(@RequestBody ScheduleDto schedule) {
@@ -36,5 +54,4 @@ public class ScheduleController {
 
         return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
     }
-
 }
