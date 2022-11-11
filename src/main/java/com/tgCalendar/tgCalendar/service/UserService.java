@@ -21,8 +21,7 @@ public class UserService {
                         .password(passwordEncoder.encode(user.getPassword()))
                         .email(user.getEmail())
                         .nickName(user.getNickName())
-                        .build())
-                .getId();
+                        .build()).getId();
 
         return userId;
     }

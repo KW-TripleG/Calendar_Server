@@ -107,6 +107,7 @@ public class UserController {
     //내 정보 조회
     @GetMapping("/user/me")
     public String getInfo() {
+        // return 값으로 현재 userId가 나옴
         String userId = SecurityUtil.getCurrentMemberId();
 
 
