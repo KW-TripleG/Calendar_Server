@@ -10,16 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserRequestDto {
     private String id;
     private String password;
     private String nickName;
     private String email;
-
-    // entity를 Dto로 변경
-    public UserDto(User entity) {
-        this.id = entity.getId();
-        this.nickName = entity.getNickName();
-        this.email = entity.getEmail();
-    }
 }

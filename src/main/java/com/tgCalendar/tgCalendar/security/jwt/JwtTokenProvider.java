@@ -24,9 +24,8 @@ import java.util.Date;
 public class JwtTokenProvider {                                                                         // JwtTokenProvider 의 함수들을 JwtAuthenticationFilter 에서 사용
 
     private String secretKey = "myprojectsecret";                                                            // token encode & decode 에 사용
-    private long tokenValidTime = 5 * 60 * 1000L;                                                      // 토큰 유효시간 30분
+    private long tokenValidTime = 10 * 60 * 1000L;                                                      // 토큰 유효시간 30분
 
-    //private final UserDetailsService userDetailsService;
     private final CustomUserDetailService userDetailsService;
 
     @PostConstruct
@@ -47,10 +46,6 @@ public class JwtTokenProvider {                                                 
 
     public Authentication getAuthentication(String token) {                                             // JWT 토큰에서 인증 정보 조회
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));         // getUserPk 에 token 넣어서 username 획득 (우리 코드에선 유저 id) -> userDetailsService 에서 유저 찾기
-
-        System.out.println("=== userDetails : " + userDetails);
-
-
         return new UsernamePasswordAuthenticationToken(userDetails, "");                       // 인증용 객체 생성 (http 요청 발생 시 AuthenticationFilter 가 요청을 가로채서 생성)
     }
 

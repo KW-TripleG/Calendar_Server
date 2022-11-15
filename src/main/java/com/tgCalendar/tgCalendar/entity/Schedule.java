@@ -15,7 +15,7 @@ import java.util.Date;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int schedule_id;
+    private int scheduleId;
 
     private int id;
 

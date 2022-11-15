@@ -1,6 +1,7 @@
 package com.tgCalendar.tgCalendar.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tgCalendar.tgCalendar.entity.Schedule;
 import com.tgCalendar.tgCalendar.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +15,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduleDto {
-    private int schedule_id;
+    private int scheduleId;
     private int id;
+
     private String title;
     private String content;
 
@@ -25,6 +27,22 @@ public class ScheduleDto {
     private Date endDate;
 
     private String duration;
+
     private String userId;
-    private User togetherId;
+    private String togetherId;
+
+    public ScheduleDto(Schedule entity) {
+        this.scheduleId = entity.getScheduleId();
+        this.id = entity.getId();
+        this.title = entity.getTitle();
+        this.content = entity.getContent();
+        this.startDate = entity.getStartDate();
+        this.endDate = entity.getEndDate();
+        this.duration = entity.getDuration();
+        this.userId = entity.getUserId().getId();
+
+        if(entity.getTogetherId() != null) {
+            this.togetherId = entity.getTogetherId().getId();
+        }
+    }
 }

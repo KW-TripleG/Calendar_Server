@@ -1,26 +1,19 @@
 package com.tgCalendar.tgCalendar.v1;
 
-import com.sun.net.httpserver.HttpServer;
-import com.tgCalendar.tgCalendar.dto.UserDto;
+import com.tgCalendar.tgCalendar.dto.UserRequestDto;
+import com.tgCalendar.tgCalendar.dto.UserResponseDto;
 import com.tgCalendar.tgCalendar.entity.User;
 import com.tgCalendar.tgCalendar.security.SecurityUtil;
 import com.tgCalendar.tgCalendar.security.jwt.JwtTokenProvider;
-import com.tgCalendar.tgCalendar.repository.UserRepository;
 import com.tgCalendar.tgCalendar.service.UserService;
 import com.tgCalendar.tgCalendar.util.Response;
 import com.tgCalendar.tgCalendar.util.StatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import java.security.Security;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -33,7 +26,7 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/join")
-    public ResponseEntity<Response> join(@RequestBody UserDto user) {
+    public ResponseEntity<Response> join(@RequestBody UserRequestDto user) {
         if (userService.findById(user.getId()) != null) {
             Response body = Response.builder()
                     .status(StatusEnum.BAD_REQUEST)
@@ -80,42 +73,35 @@ public class UserController {
                 .build();
         return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);              // 존재하는 id 이고, 패스워드도 올바르다면 -> createToken 함수로 유저 id 정보를 담은 JWT 토큰 반환
                                                                                                     // 이후 클라이언트는 이 JWT 토큰을 'X-AUTH-TOKEN' 필드에 넣어서 요청
-
     }
-
-    // 내 정보 조회 - security 필터 없이
-//    @GetMapping("/user/me")
-//    public ResponseEntity<Response> getMyInfo(@RequestHeader("X-AUTH-TOKEN") String token) {
-//        if (token == null || jwtTokenProvider.validateToken(token) == false) {
-//            Response body = Response.builder()
-//                    .status(StatusEnum.UNAUTHORIZED)
-//                    .message("권한이 없는 유저입니다.")
-//                    .build();
-//            return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        String userId = jwtTokenProvider.getUserPk(token);
-//
-//        Response body = Response.builder()
-//                .status(StatusEnum.OK)
-//                .data(new UserDto(userService.findById(userId)))
-//                .message("내 정보 조회 성공")
-//                .build();
-//        return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
-//    }
 
     //내 정보 조회
     @GetMapping("/user/me")
-    public String getInfo() {
-        // return 값으로 현재 userId가 나옴
+    public ResponseEntity<Response> getInfo() {
         String userId = SecurityUtil.getCurrentMemberId();
 
+        User user = userService.findById(userId);
 
-
-
-        return userId;
+        Response body = Response.builder()
+                .status(StatusEnum.OK)
+                .data(new UserResponseDto(user))
+                .message("내 정보 조회 성공")
+                .build();
+        return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
     }
 
+    //내 정보 수정
+    @PutMapping("/user/me")
+    public ResponseEntity<Response> updateUser(@RequestBody UserRequestDto user) {
+        String userId = SecurityUtil.getCurrentMemberId();
 
+        User updatedUser = userService.updateUser(userId, user);
 
+        Response body = Response.builder()
+                .status(StatusEnum.OK)
+                .data(new UserResponseDto(updatedUser))
+                .message("내 정보 수정 성공")
+                .build();
+        return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
+    }
 }

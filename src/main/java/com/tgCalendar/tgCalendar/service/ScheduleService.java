@@ -2,50 +2,63 @@ package com.tgCalendar.tgCalendar.service;
 
 import com.tgCalendar.tgCalendar.dto.ScheduleDto;
 import com.tgCalendar.tgCalendar.entity.Schedule;
+import com.tgCalendar.tgCalendar.entity.User;
+import com.tgCalendar.tgCalendar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.tgCalendar.tgCalendar.repository.ScheduleRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    public Schedule findById(int schedule_id) {
-        Optional<Schedule> schedule = scheduleRepository.findById(schedule_id);
+    public Schedule findByScheduleId(int schedule_id) {
+        Optional<Schedule> schedule = scheduleRepository.findByScheduleId(schedule_id);
         return schedule.orElse(null);
     }
 
-    public int saveSchedule(ScheduleDto schedule) {
+    public List<Schedule> findAllByUserId(String userId) {
+        List<Schedule> scheduleList = scheduleRepository.findAllByUserId_Id(userId);
+        return scheduleList;
+    }
+
+    public int saveSchedule(String currentUserId, ScheduleDto schedule) {
+        User currentUser = userService.findById(currentUserId);
+
         int scheduleId = scheduleRepository.save(Schedule.builder()
-                        .schedule_id(schedule.getSchedule_id())
-                        .id(schedule.getId())
+                        .userId(currentUser)
                         .title(schedule.getTitle())
                         .content(schedule.getContent())
                         .startDate(schedule.getStartDate())
                         .endDate(schedule.getEndDate())
                         .duration(schedule.getDuration())
                         .build())
-                .getId();
+                .getScheduleId();
 
         return scheduleId;
     }
 
     public int updateSchedule(ScheduleDto schedule) {
-        int scheduleId = scheduleRepository.save(Schedule.builder()
-                        .schedule_id(schedule.getSchedule_id())
-                        .id(schedule.getId())
-                        .title(schedule.getTitle())
-                        .content(schedule.getContent())
-                        .startDate(schedule.getStartDate())
-                        .endDate(schedule.getEndDate())
-                        .togetherId(schedule.getTogetherId())
-                .build()).getSchedule_id();
+        Schedule updatingSchedule = findByScheduleId(schedule.getScheduleId());
 
-        return scheduleId;
+        if (schedule.getTitle() != null) {
+            updatingSchedule.setTitle(schedule.getTitle());
+        }
+        if (schedule.getContent() != null) {
+            updatingSchedule.setContent(schedule.getContent());
+        }
+        if (schedule.getStartDate() != null) {
+            updatingSchedule.setStartDate(schedule.getStartDate());
+        }
+        if (schedule.getEndDate() != null) {
+            updatingSchedule.setEndDate(schedule.getEndDate());
+        }
+
+        return scheduleRepository.save(updatingSchedule).getScheduleId();
     }
 }
