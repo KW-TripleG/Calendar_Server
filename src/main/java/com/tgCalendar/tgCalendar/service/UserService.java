@@ -3,9 +3,11 @@ package com.tgCalendar.tgCalendar.service;
 import com.tgCalendar.tgCalendar.dto.UserRequestDto;
 import com.tgCalendar.tgCalendar.entity.User;
 import com.tgCalendar.tgCalendar.repository.UserRepository;
+import com.tgCalendar.tgCalendar.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -31,6 +33,9 @@ public class UserService {
 
         return user.orElse(null);
     }
+    public void deleteById(String userId) {
+        userRepository.deleteById(userId);
+    }
 
     public User updateUser(String currentUserId, UserRequestDto user) {
         User updatingUser = findById(currentUserId);
@@ -50,4 +55,14 @@ public class UserService {
 
         return userRepository.save(updatingUser);
     }
+    @Transactional
+    public int delete(String id) {
+        Optional<User> oUser = userRepository.findById(id);
+        if(oUser.isPresent()) {
+            userRepository.delete(oUser.get());
+            return 1;
+        }
+        return 0;
+    }
+
 }

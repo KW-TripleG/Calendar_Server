@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -103,5 +105,19 @@ public class UserController {
                 .message("내 정보 수정 성공")
                 .build();
         return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user/me/{id}")
+    public Map<String, Object> delete(@PathVariable("id") String id) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (userService.delete(id) > 0) {
+            response.put("result", "SUCCESS");
+        } else {
+            response.put("result", "FAIL");
+            response.put("reason", "일치하는 회원 정보가 없습니다. 사용자 id를 확인해주세요.");
+        }
+
+        return response;
     }
 }
