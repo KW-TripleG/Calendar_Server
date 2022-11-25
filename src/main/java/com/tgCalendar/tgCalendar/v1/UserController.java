@@ -95,6 +95,7 @@ public class UserController {
         return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
     }
 
+
     //내 정보 수정
     @PutMapping("/user/me")
     public ResponseEntity<Response> updateUser(@RequestBody UserRequestDto user) {
