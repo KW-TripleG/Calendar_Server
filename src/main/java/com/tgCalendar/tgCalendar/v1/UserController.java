@@ -5,6 +5,7 @@ import com.tgCalendar.tgCalendar.dto.UserResponseDto;
 import com.tgCalendar.tgCalendar.entity.User;
 import com.tgCalendar.tgCalendar.security.SecurityUtil;
 import com.tgCalendar.tgCalendar.security.jwt.JwtTokenProvider;
+import com.tgCalendar.tgCalendar.service.ScheduleService;
 import com.tgCalendar.tgCalendar.service.UserService;
 import com.tgCalendar.tgCalendar.util.Response;
 import com.tgCalendar.tgCalendar.util.StatusEnum;
@@ -25,6 +26,8 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final UserService userService;
+
+    private final ScheduleService scheduleService;
 
     // 회원가입
     @PostMapping("/join")
@@ -110,6 +113,8 @@ public class UserController {
     @DeleteMapping("/user/me/{id}")
     public Map<String, Object> delete(@PathVariable("id") String id) {
         Map<String, Object> response = new HashMap<>();
+
+        scheduleService.deleteScheduleByUserId(id);
 
         if (userService.delete(id) > 0) {
             response.put("result", "SUCCESS");

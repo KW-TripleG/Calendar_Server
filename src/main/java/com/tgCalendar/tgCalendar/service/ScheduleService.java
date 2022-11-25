@@ -69,4 +69,12 @@ public class ScheduleService {
 
         return 0;
     }
+
+    public int deleteScheduleByUserId(String userId){
+        List<Schedule> scheduleList = scheduleRepository.findAllByUserId_Id(userId);
+        for(Schedule el : scheduleList){
+            scheduleRepository.delete(el);
+        }
+        return 0;
+    }
 }
