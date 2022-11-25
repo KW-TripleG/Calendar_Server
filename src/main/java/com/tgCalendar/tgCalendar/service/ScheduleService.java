@@ -61,4 +61,12 @@ public class ScheduleService {
 
         return scheduleRepository.save(updatingSchedule).getScheduleId();
     }
+
+    public int deleteSchedule(ScheduleDto schedule) {
+        Schedule deletedSchedule = findByScheduleId(schedule.getScheduleId());
+
+        scheduleRepository.delete(deletedSchedule);
+
+        return 0;
+    }
 }

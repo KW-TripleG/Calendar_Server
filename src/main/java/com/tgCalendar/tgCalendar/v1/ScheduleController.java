@@ -46,6 +46,7 @@ public class ScheduleController {
                 .data(savedScheduleId)
                 .message("스케줄 등록 성공")
                 .build();
+
         return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
     }
 
@@ -66,6 +67,27 @@ public class ScheduleController {
                 .data(updateScheduleId)
                 .message("Schedule 변경 성공")
                 .build();
+        return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-schedule")
+    public ResponseEntity<Response> deleteSchedule(@RequestBody ScheduleDto schedule) {
+        if (scheduleService.findByScheduleId(schedule.getScheduleId()) == null) {
+            Response body = Response.builder()
+                    .status(StatusEnum.BAD_REQUEST)
+                    .message("없는 스케쥴입니다")
+                    .build();
+            return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.BAD_REQUEST);
+        }
+
+        int deletedScheduleId = scheduleService.deleteSchedule(schedule);
+
+        Response body = Response.builder()
+                .status(StatusEnum.OK)
+                .data(deletedScheduleId)
+                .message("Schedule 삭제 완료")
+                .build();
+
         return new ResponseEntity<>(body, Response.getDefaultHeader(), HttpStatus.OK);
     }
 }
