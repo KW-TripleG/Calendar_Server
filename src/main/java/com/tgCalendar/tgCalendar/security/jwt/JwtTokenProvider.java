@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
@@ -24,7 +25,9 @@ import java.util.Date;
 public class JwtTokenProvider {                                                                         // JwtTokenProvider 의 함수들을 JwtAuthenticationFilter 에서 사용
 
     private String secretKey = "myprojectsecret";                                                            // token encode & decode 에 사용
-    private long tokenValidTime = 10 * 60 * 1000L;                                                      // 토큰 유효시간 30분
+    //private long tokenValidTime = 10 * 60 * 1000L;                                                      // 토큰 유효시간 10분
+    private long tokenValidTime = Duration.ofDays(14).toMillis();                                         // 토큰 유효시간 2주
+
 
     private final CustomUserDetailService userDetailsService;
 
